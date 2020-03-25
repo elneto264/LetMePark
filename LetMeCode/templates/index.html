@@ -15,19 +15,20 @@
 </head>
 
 <body>
-    <div class="row container-fluid ">
-
-        <div class="col-xs col-md col-lg buscador">
-            <img class="logo" src="{% static 'img/logo.png' %}">
-            <div class="cuadrobuscar">
-                <form class="form-inline " action="/buscar/" method="GET">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Buscar dirección" aria-label="Search">
-                    <button class="btn btn-outline-danger my-2 my-sm-0 barrabuscar" type="submit">Buscar</button>
-                </form>
+    <div class="container-fluid">
+        <div class="row ">
+            <div class="col-xs col-md col-lg buscador">
+                <img class="logo" src="{% static 'img/logo.png' %}">
+                <div class="cuadrobuscar">
+                    <form class="form-inline " action="/buscar/" method="GET">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar dirección" aria-label="Search">
+                        <button class="btn btn-outline-danger my-2 my-sm-0 barrabuscar" type="submit">Buscar</button>
+                    </form>
+                </div>
             </div>
         </div>
+        <div class="mapa" id="map"></div>
     </div>
-    <div class="mapa" id="map"></div>
 
     <script src="{% static 'js/script.js' %}"></script>
 </body>

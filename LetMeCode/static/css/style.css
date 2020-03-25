@@ -2,7 +2,6 @@
     position: absolute;
     z-index: 2;
     margin-top: 25px;
-    margin-left: 50px;
     float: left;
 }
 
@@ -11,6 +10,7 @@
     padding: 5px;
     background-color: #a71d21;
     border-radius: 10px;
+    margin-left: 50px;
 }
 
 .logo {
