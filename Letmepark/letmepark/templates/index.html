@@ -21,8 +21,8 @@
                 <img class="logo" src="{% static 'img/logo.png' %}">
                 <div class="cuadrobuscar">
                     <form class="form-inline " action="/buscar/" method="GET">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar dirección" aria-label="Search">
-                        <button class="btn btn-outline-danger my-2 my-sm-0 barrabuscar" type="submit">Buscar</button>
+                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar dirección" name="buscar" aria-label="Search">
+                        <input type="submit" role="button" name="buscar" value="Buscar" class="btn btn-outline-danger my-2 my-sm-0 barrabuscar" aria-label="Buscar">
                     </form>
                 </div>
             </div>

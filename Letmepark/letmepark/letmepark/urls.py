@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import path
 from buscador import views
 from buscador.views import Inicio
+from django.conf.urls import include, url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',Inicio.as_view(), name= 'index'),
+    path('',Inicio.as_view(), name='index'),
+    path('buscar/',views.buscar),
 ]
