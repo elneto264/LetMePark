@@ -2,7 +2,7 @@
 
 <body>
 
-    <p>estas buscando: <strong>{{query}}</strong></p>
+    <p>estas buscando: <strong>{{querys}}</strong></p>
 
     {% if busqueda %}
 
@@ -11,9 +11,9 @@
     <ul>
 
 
-        {% for busqueda in busquedas %}
+        {% for busquedas in busqueda %}
         <li>
-            {{busqueda.nombre}} &nbsp; {{busqueda.latitud}} &nbsp; {{busqueda.longitud}} &nbsp; {{busqueda.direccion}}
+            {{busquedas.nombre}} &nbsp; {{busquedas.latitud}} &nbsp; {{busquedas.longitud}} &nbsp; {{busquedas.direccion}}
 
         </li>
         {% endfor %}
