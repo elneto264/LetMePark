@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'vaads)onh+h$6_c8%fl&obuju!l!r_&emf&z7sij$!-tt3icr6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['']
 
@@ -155,6 +155,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=(BASE_DIR, 'static')
 STATIC_TMP = (BASE_DIR, 'static')
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
