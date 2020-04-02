@@ -83,11 +83,33 @@ WSGI_APPLICATION = 'letmepark.wsgi.application'
 # }
 
 DATABASES = {
+
+    'default': {
+        'ENGINE': 'djongo',
+        'ENFORCE_SCHEMA': True,
+        'LOGGING': {
+            'version': 1,
+            'loggers': {
+                'djongo': {
+                    'level': 'DEBUG',
+                    'propogate': False,                        
+                }
+            },
+         },
+        'NAME': 'letmepark',
+        'CLIENT': {
+            'host': 'mongodb+srv://students:a428PmHV6DzfPMnk@mongodb-cluster-us-east-1-yuln1.mongodb.net/test?retryWrites=true&w=majority',
+        }
+    }
+} 
+
+
+""" DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'basdeprueba',
     }
-}
+}"""
 
 
 # Password validation
