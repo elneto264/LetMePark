@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.views.generic import ListView,TemplateView,CreateView
-from .models import EjemploDato
+from .models import Parkings
 from django.db.models import Q
 
 # Create your views here.
@@ -10,7 +10,6 @@ from django.db.models import Q
 class Inicio(TemplateView):
     template_name= 'index.html'
 
-    
 """ def buscar(request):
     
     if request.GET["buscar"]:
@@ -24,38 +23,28 @@ class Inicio(TemplateView):
     return HttpResponse(mensaje) """
 
 
-# def buscar(request):
-#     queryset = request.GET.get("buscar")
-#     #EjemploDato = EjemploDato.objects.filter(estado = True)
-#     if queryset:
-#         dato = EjemploDato.objects.filter(
-#             Q(nombre__icontains = queryset) |
-#             Q(direccion__icontains = queryset)
-#         )
-#         return render(request, 'resultadosbusqueda.html',{'dato':dato})
-#     else: 
-#         mensaje ="No encontrado"
-#     return HttpResponse(mensaje)
+class Buscar(ListView):
+    model = Parkings
+    template_name = 'resultadosbusqueda.html'
 
+    def get_queryset(self):
+        query = self.request.GET.get('campobuscar')
+        if query:
+            object_list = self.model.objects.filter(
+                  Q(name__icontains = query) |
+                  Q(provider__icontains = query)|
+                  Q(lmpPID__icontains  = query)
+                  #Q(longitud__icontains = query)
+            ).distinct()
+            return object_list
+        else:
+            return self.model.objects.none()
 
+    def get_context_data(self,**kwargs):
+        contexto = {}
+        contexto['busqueda'] = self.get_queryset()
+        return contexto
 
+    def get(self,request,*args,**kwargs):
+        return render(request,self.template_name,self.get_context_data())    
 
-def buscar(request):
-    
-    if request.GET["campobuscar"]: 
-        q = request.GET["campobuscar"]
-        print ('Entro en el if'+ q)
-        #querys = (Q(direccion__nombre__icontains=q) | Q(longitud__latitud__icontains=q))
-        #querys = Q(nombre__icontains=q)               
-        #ejemplodato = EjemploDato.objects.filter(querys)
-        ejemplodato = EjemploDato.objects.filter(
-            Q(nombre__icontains = q) |
-            Q(direccion__icontains = q)|
-            Q(latitud__icontains = q)|
-            Q(longitud__icontains = q)
-        ).distinct()
-        return render(request, "resultadosbusqueda.html", {'busqueda': ejemplodato})
-    else:
-        mensaje="No has introducido nada"
-
-    return HttpResponse(mensaje) 

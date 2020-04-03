@@ -1,37 +1,28 @@
 {% load static %} {% load bootstrap4 %}
-<!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <title>Let Me Code</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
+  
+    <link rel="stylesheet" href="static/js/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="js/leaflet.ie.css" /><![endif]-->
+    <link rel="stylesheet" type="text/css" href="static/css/estilos.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-
-
-</head>
-
-<body>
-    <div class="container-fluid">
-        <div class="row ">
-            <div class="col-xs col-md col-lg buscador">
-                <img class="logo" src="{% static 'img/logo.png' %}">
-                <div class="cuadrobuscar">
-                    <form class="form-inline " action="buscar/" method="GET">
-                        {% csrf_token %}
-                        <input class="form-control mr-sm-2" type="search" placeholder="Buscar dirección" name="campobuscar" aria-label="Search">
-                        <input type="submit" role="button" name="buscar" value="Buscar" class="btn btn-outline-danger my-2 my-sm-0 barrabuscar" aria-label="Buscar">
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="mapa" id="map"></div>
-    </div>
-
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-
+    <script src="static/js/leaflet.js"></script>
+    <script src="static/js/jquery-1.8.2.min.js"></script>
+  </head>
+  <body> 
+  <div class="container-fluid">
+      <div id="mapa"></div>
+      {% comment %} <img class="logo" src="{% static 'images/logo.png' %}"> {% endcomment %}
+          <div id="buscador">
+              <input type="text" name="direccion" value="" id="direccion" size="10" />
+              <button type="button" onclick="direccion_buscador();">Buscador</button>
+              <div id="resultado">
+          </div>
+          <script src="static/js/script.js"></script>
+          </div>
+          </div>
+  </body>
 </html>
