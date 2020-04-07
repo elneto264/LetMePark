@@ -4,47 +4,33 @@ from django.http import HttpResponse
 from django.views.generic import ListView,TemplateView,CreateView
 from .models import Parkings
 from django.db.models import Q
+from django.core import serializers
 
 # Create your views here.
 
 class Inicio(TemplateView):
     template_name= 'index.html'
 
-""" def buscar(request):
-    
-    if request.GET["buscar"]:
-        #mensaje="Articulo buscado: %r" %request.GET["prd"]
-        direccion= request.GET["buscar"]
-        busqueda= EjemploDato.objects.filter(nombre__icontains=direccion) #icontains es como el like de sql asi: like nombre ="raqueta"
-        return render(request,"resultadosbusqueda.html",{"busqueda": busqueda, "query":direccion})
-    else:
-        mensaje="No has introducido nada"
-
-    return HttpResponse(mensaje) """
-
-
-class Buscar(ListView):
+''' class ListaAjax(ListView):
     model = Parkings
-    template_name = 'resultadosbusqueda.html'
+    template_name='busquedaAjax.html'
+        
+    def get_context_data(self, **kwargs):
+            context = super(ListaAjax, self).get_context_data(**kwargs)
+            context['parking'] = Parkings.objects.all()
+            return context '''
 
-    def get_queryset(self):
-        query = self.request.GET.get('campobuscar')
-        if query:
-            object_list = self.model.objects.filter(
-                  Q(name__icontains = query) |
-                  Q(provider__icontains = query)|
-                  Q(lmpPID__icontains  = query)
-                  #Q(longitud__icontains = query)
+class BusquedaAjax(TemplateView):
+    model = Parkings
+    #template_name='index.html'
+
+    def get(self, request, *args, **kwargs):
+        id_tipo = request.GET['direccion']
+        print (id_tipo+"entra al id tipo")
+        parking = Parkings.objects.filter(
+            Q(name__icontains = id_tipo)|
+            Q(provider__icontains = id_tipo)
             ).distinct()
-            return object_list
-        else:
-            return self.model.objects.none()
-
-    def get_context_data(self,**kwargs):
-        contexto = {}
-        contexto['busqueda'] = self.get_queryset()
-        return contexto
-
-    def get(self,request,*args,**kwargs):
-        return render(request,self.template_name,self.get_context_data())    
-
+        data = serializers.serialize('json',parking,fields=('name','provider','lmpPID','address','lon','lat'))
+        print(data + "entra al data del view")
+        return HttpResponse(data, content_type='application/json')      
