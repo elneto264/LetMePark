@@ -22,11 +22,6 @@ from django.conf.urls import include, url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',Inicio.as_view(), name='index'),
-<<<<<<< HEAD
-    # path('buscar',Buscar.as_view(), name='buscar'),
-    path('ajax/',BusquedaAjax.as_view(), name='BusquedaAjax'),
-=======
     path('BusquedaAjax/',BusquedaAjax.as_view(), name='BusquedaAjax'),
->>>>>>> Desarollo
 
 ]
