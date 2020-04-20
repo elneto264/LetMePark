@@ -25,7 +25,7 @@ SECRET_KEY = 'vaads)onh+h$6_c8%fl&obuju!l!r_&emf&z7sij$!-tt3icr6'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['letmepark-students.herokuapp.com']
 
 
 # Application definition
