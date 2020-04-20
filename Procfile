@@ -1,1 +1,1 @@
-web: gunicorn letmepark
+web: gunicorn letmepark:letmepark
