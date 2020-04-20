@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 """
 Django settings for letmepark project.
 
@@ -152,6 +153,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS=(BASE_DIR, 'static')
 =======
+=======
+>>>>>>> Desarollo
 """
 Django settings for letmepark project.
 
@@ -193,6 +196,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buscador',
     'bootstrap4',
+    
 ]
 
 MIDDLEWARE = [
@@ -229,12 +233,7 @@ WSGI_APPLICATION = 'letmepark.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+
 
 DATABASES = {
 
@@ -257,13 +256,6 @@ DATABASES = {
     }
 } 
 
-
-""" DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'basdeprueba',
-    }
-}"""
 
 
 # Password validation
@@ -305,7 +297,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS=(BASE_DIR, 'static')
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 django_heroku.settings(locals())
 >>>>>>> Desarollo
+>>>>>>> Desarollo
+=======
 >>>>>>> Desarollo

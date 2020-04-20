@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+}
+
+#mapa {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#buscador {
+    display: inline-block;
+    background-color: white;
+    position: relative;
+    bottom: 40px;
+    left: 40px;
+    width: 300px;
+    /* height: auto; */
+    padding: 10px;
+    margin-top: 50px;
+    border-radius: 10px;
+    border: 1px solid #a71d21;
+    /* margin: 40px; */
+}
+
+#buscador input {
+    width: 246px;
+    border-radius: 5px;
+    border: 1px solid #a71d21;
+    margin-top: 40px;
+}
+
+#resultado {
+    font-style: sans-serif;
+    color: #93c7ff;
+    font-size: 75%;
+}
+
+.logo {
+    width: 70px;
+    position: absolute;
+    float: left;
+}
+
+#draggable {
+    width: 100%;
+    margin-top: 500px;
+    float: left;
+}
+
+#draggablePadre {
+    /* border: 3px dashed black; */
+    width: 100%;
+    height: 100%;
+    /* float: left; */
+    overflow: hidden;
+    position: absolute;
+}
+
+#datoPop {
+    width: auto;
+    display: block;
+    height: 150px;
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}

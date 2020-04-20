@@ -1,8 +1,10 @@
 {% load static %} {% load bootstrap4 %}
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <title>Let Me Code</title>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   
@@ -16,49 +18,52 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 >>>>>>> Desarollo
+=======
+>>>>>>> Desarollo
 
-    <link rel="stylesheet" href="static/js/leaflet.css" />
-    <!--[if lte IE 8]><link rel="stylesheet" href="js/leaflet.ie.css" /><![endif]-->
-    <link rel="stylesheet" type="text/css" href="static/css/estilos.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-    <script src="static/js/leaflet.js"></script>
-    <script src="static/js/jquery-1.8.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/leaflet.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/css/estilos2.css' %}">
+    <script src="https://kit.fontawesome.com/ac5fa3b011.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div id="draggablePadre">
         <div id="mapa"></div>
-        <img class="logo" src="{% static 'images/logo.png' %}">
+        <!-- <div id="draggable" class="ui-widget-content"> -->
         <div id="buscador">
-            <input type="text" name="direccion" id="direccion" size="10" />
-            <button type="button" onclick="direccion_buscador();">Buscador</button>
-            <div id="resultado">
-            </div>
-            <!-- <form class="form-inline " action="ajax/" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="ajax" value="{{ request.GET.ajax }}" placeholder="Buscar dirección" aria-label="Search">
-            <button class="btn btn-outline-danger my-2 my-sm-0 barrabuscar" type="submit">Buscar</button>
-        </form> -->
-            <script src="static/js/script.js"></script>
+            <img class="logo" src="{% static 'img/logo2.png' %}" type="submit" onclick="javascript:window.location.reload();">
+            <input type="search" name="direccion" id="direccion" size="10" placeholder="Escriba dirección..." />
+            <i id="myBtn" type="submit" onclick="direccion_buscador();" class="fas fa-search fa-lg" style="color:#a71d21;"></i>
+            <div id="resultado"></div>
         </div>
+        <!-- </div> -->
     </div>
-</body>
->>>>>>> Desarollo
+    <!-- <div id="draggablePadre2" class="ui-widget-content"></div> -->
 
-    <script src="static/js/leaflet.js"></script>
-    <script src="static/js/jquery-1.8.2.min.js"></script>
-  </head>
-  <body> 
-  <div class="container-fluid">
-      <div id="mapa"></div>
-      {% comment %} <img class="logo" src="{% static 'images/logo.png' %}"> {% endcomment %}
-          <div id="buscador">
-              <input type="text" name="direccion" value="" id="direccion" size="10" />
-              <button type="button" onclick="direccion_buscador();">Buscador</button>
-              <div id="resultado">
-          </div>
-          <script src="static/js/script.js"></script>
-          </div>
-          </div>
-  </body>
+    <!--EVENTO PARA INTRO DEL BUSCADOR-->
+    <script src="{% static '/js/leaflet.js' %}"></script>
+    <script src="{% static '/js/jquery-1.8.2.min.js' %}"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        var input = document.getElementById("direccion");
+        input.addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("myBtn").click();
+            }
+        });
+
+        $(function() {
+            $("#buscador").draggable({
+                containment: "parent"
+            });
+        });
+    </script>
+
+
+</body>
+
 </html>

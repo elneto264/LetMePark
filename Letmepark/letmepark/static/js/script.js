@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
 var mapa;
@@ -89,6 +90,8 @@ function valor() {
 
 
 >>>>>>> Desarollo
+=======
+>>>>>>> Desarollo
 var mapa;
 var tipo;
 
@@ -98,7 +101,12 @@ function cargar_mapa() {
     var osmAttribution = 'Map data &copy; 2012 <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
     var layer_osm = new L.TileLayer(osmUrl, { maxZoom: 18, attribution: osmAttribution });
     mapa.setView(new L.LatLng(40.4165, -3.70256), 13).addLayer(layer_osm);
+
+
 }
+
+
+
 
 function elegirDireccion(lat1, lng1, lat2, lng2, tipo_osm) {
     var loc1 = new L.LatLng(lat1, lng1);
@@ -115,14 +123,13 @@ function elegirDireccion(lat1, lng1, lat2, lng2, tipo_osm) {
     } else {
         var loc3 = new L.LatLng(lat1, lng2);
         var loc4 = new L.LatLng(lat2, lng1);
-        tipo = L.polyline([loc1, loc4, loc2, loc3, loc1], { color: 'red' }).addTo(mapa);
+        tipo = L.polyline([loc1, loc4, loc2, loc3, loc1], { color: 'grey' }).addTo(mapa);
         mapa.fitBounds(bounds);
     }
-    var TodasLocalizaciones = [loc1];
-    console.log(TodasLocalizaciones);
-    // return TodasLocalizaciones;
-    valor(TodasLocalizaciones);
+    valor(loc1, loc2);
 }
+
+
 
 function direccion_buscador() {
     var entrada = document.getElementById("direccion");
@@ -145,46 +152,84 @@ function direccion_buscador() {
         } else {
             $('<p>', { html: "Ningun resultado encontrado." }).appendTo('#resultado');
         }
+
     });
 }
-//Al parametro le ponemos el nombre de la variable de TodasLocalizaciones
-function valor(TodasLocalizaciones) {
-    console.log('este texto corresponde' + TodasLocalizaciones)
+
+
+
+
+function valor(loc1, loc2) {
     $.ajax({
-        data: { 'loc': TodasLocalizaciones },
-        url: '/buscador/ajax/',
+        data: { 'lat1': loc1.lat, 'lon1': loc1.lng, 'lat2': loc2.lat, 'lon2': loc2.lng, },
+        url: '/BusquedaAjax/',
         type: 'get',
         success: function(data) {
-            console.log(data + "funciona en el success")
-                //var html = ""
-                // for(var i = 0; i < data.length; i++){
-                //     html += '<tr><td>'+ data[i].fields.nombre + '</td><td>'+data[i].fields.caracteristica +'</td><tr>'
-                // }
-                // $('#info').html(html);
+            console.log("consulta hecha")
 
-            //var pines = [
-            //  [fields.lmpPID, fields.name, fields.provider, fields.address, fields.lon, fields.lat], /* estas son las posiciones que aparecen en el for mas abajo, tomat en cuenta las comas porque son las que distinguen las posiciones de array*/
-            // [fields.lmpPID, fields.name, fields.provider, fields.address, fields.lon, fields.lat],
-            // [fields.lmpPID, fields.name, fields.provider, fields.address, fields.lon, fields.lat],
-            // [fields.lmpPID, fields.name, fields.provider, fields.address, fields.lon, fields.lat],
-            //[fields.lmpPID, fields.name, fields.provider, fields.address, fields.lon, fields.lat],
-
-            // ];
+            var parkIcon = L.icon({
+                iconUrl: '/static/img/car.png',
+                // shadowUrl: '/static/img/marker-shadow.png',
+                iconSize: [35, 35],
+                // shadowSize:[30, 44],
+            });
 
 
-            //for (var i = 0; i < pines.length; i++) {
-            // marker += new L.marker([pines[i][1], pines[i][2], pines[i][3], pines[i][4]]) /* aqui vas las posiciones del array de arriba*/
-            //    .bindPopup(pines[i][0])
-            //     .addTo(mapa);
-            // }
-            // $('#mapa').html(marker); /* aqui se imprime el for, el cual son los multiples marcadores en el mapa*/
+
+
+
+            for (var i = 0; i < data.length; i++) {
+
+                var customPopup = "<div></div>";
+                var customOptions = {
+                    'maxWidth': '300',
+                    'width': '100',
+                    'className': 'popupCustom'
+                };
+
+
+                L.marker([data[i].fields.lat, data[i].fields.lon], { icon: parkIcon })
+                    .bindPopup("<ul id='datoPop' class='list-group list-group-flush'>" +
+                        "<li class='list-group-item'><b>Nombre:</b>" + " " + data[i].fields.name + "</li>" +
+                        "<li class='list-group-item'><b>Dirección:</b>" + " " + data[i].fields.address + "</li>" +
+                        "<li class='list-group-item'><b>lmpPID:</b>" + " " + data[i].fields.lmpPID + "</li>" +
+                        "<li class='list-group-item'><b>Provider:</b>" + " " + data[i].fields.provider + "</li>" +
+                        "<li class='list-group-item'><b>PID:</b>" + " " + data[i].fields.PID + "</li>" +
+                        "<li class='list-group-item'><b>Longitud:</b>" + " " + data[i].fields.lon + "</li>" +
+                        "<li class='list-group-item'><b>Latitud:</b>" + " " + data[i].fields.lat + "</li>" +
+                        "<li class='list-group-item'><b>Pais:</b>" + " " + data[i].fields.country + "</li>" +
+                        "<li class='list-group-item'><b>Región:</b>" + " " + data[i].fields.region + "</li>" +
+                        "<li class='list-group-item'><b>Area:</b>" + " " + data[i].fields.area + "</li>" +
+                        "<li class='list-group-item'><b>Who:</b>" + " " + data[i].fields.who + "</li>" +
+                        "<li class='list-group-item'><b>Is_used:</b>" + " " + data[i].fields.is_used + "</li>" +
+                        "<li class='list-group-item'><b>Cancelable:</b>" + " " + data[i].fields.cancelable + "</li>" +
+                        "<li class='list-group-item'><b>Cancel_mn:</b>" + " " + data[i].fields.cancel_mn + "</li>" +
+                        "<li class='list-group-item'><b>Cancel_msg:</b>" + " " + data[i].fields.cancel_msg + "</li>" +
+                        "<li class='list-group-item'><b>Max_height:</b>" + " " + data[i].fields.max_height + "</li>" +
+                        "<li class='list-group-item'><b>Hour_price:</b>" + " " + data[i].fields.hour_price + "</li>" +
+                        "<li class='list-group-item'><b>Day_price:</b>" + " " + data[i].fields.day_price + "</li>" +
+                        "<li class='list-group-item'><b>access_msg:</b>" + " " + data[i].fields.access_msg + "</li>" +
+                        "<li class='list-group-item'><b>User_val:</b>" + " " + data[i].fields.user_val + "</li>" +
+                        "<li class='list-group-item'><b>Lmp_val:</b>" + " " + data[i].fields.lmp_val + "</li>" +
+                        "<li class='list-group-item'><b>Ben_val:</b>" + " " + data[i].fields.ben_val + "</li>" +
+                        "<li class='list-group-item'><b>Gen_val:</b>" + " " + data[i].fields.gen_val + "</li>" +
+                        "<li class='list-group-item'><b>Car_pc:</b>" + " " + data[i].fields.car_pc + "</li>" +
+                        "<li class='list-group-item'><b>Human_pc:</b>" + " " + data[i].fields.human_pc + "</li>" +
+                        "<li class='list-group-item'><b>Slug:</b>" + " " + data[i].fields.slug + "</li>" +
+                        "<li class='list-group-item'><b>Booking Url:</b>" + " " + "<a href=" + data[i].fields.booking_url + ">" + "</a></li >" + "</ul>").addTo(mapa);
+            }
         }
+
     });
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 window.onload = cargar_mapa;
 =======
 getData();
 >>>>>>> Desarollo
+>>>>>>> Desarollo
+=======
+window.onload = cargar_mapa;
 >>>>>>> Desarollo

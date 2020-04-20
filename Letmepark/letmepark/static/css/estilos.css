@@ -5,34 +5,37 @@ body {
 #mapa {
     width: 100%;
     height: 100%;
+    position: absolute;
 }
 
 #buscador {
-    background-color: #a71d21;
+    background-color: white;
     position: absolute;
     bottom: 40px;
     left: 40px;
     width: auto;
     height: auto;
     padding: 10px;
+    margin-top: 80px;
+    border-radius: 10px;
+    border: 1px solid #a71d21;
 }
 
 #buscador input {
-    width: 200px;
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #a71d21;
+    margin-top: 40px;
 }
 
 #resultado {
     font-style: sans-serif;
-    color: black;
+    color: #a71d21;
     font-size: 75%;
 }
-/*NO SE ESTA UTILIZANDO, ESTA COMENTADO EN EL INDEX*/
-.logo {
-    width: 8%;
-    float: right;
-    margin-right: 70px;
-    background-color: #a71d21;
-    padding: 5px;
-    border-radius: 10px;
-}
 
+.logo {
+    width: 70px;
+    position: absolute;
+    float: left;
+}
