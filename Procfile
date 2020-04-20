@@ -1,1 +1,1 @@
-web: gunicorn letmepark:letmepark
+web: gunicorn wsgi:application
