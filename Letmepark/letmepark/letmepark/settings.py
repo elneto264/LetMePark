@@ -103,7 +103,7 @@ DATABASES = {
          },
         'NAME': 'letmepark',
         'CLIENT': {
-            'host': 'mongodb+srv://students:a428PmHV6DzfPMnk@mongodb-cluster-us-east-1-yuln1.mongodb.net/test?retryWrites=true&w=majority',
+            'host': 'mongodb+srv://<usuario>:<clave>@mongodb-cluster-us-east-1-yuln1.mongodb.net/test?retryWrites=true&w=majority',
         }
     }
 } 
