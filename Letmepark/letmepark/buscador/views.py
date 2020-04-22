@@ -22,5 +22,6 @@ class BusquedaAjax(TemplateView):
         kwargs = {'lon__gte': lon1,'lon__lte': lon2,'lat__gte': lat1,'lat__lte': lat2} 
         parking = Parkings.objects.filter(**kwargs)   
             
-        data = serializers.serialize('json',parking,fields=('name','provider','lmpPID','address','lon','lat'))
+        data = serializers.serialize('json',parking,fields=('name','provider','lmpPID','address','lon','lat', 'country', 'region', 'area', 'PID', 'who', 'is_used', 'cancelable', 'cancel_mn', 'cancel_msg', 'max_height', 'hour_price', 'day_price', 'access_msg', 'user_val', 'lmp_val', 'ben_val', 'gen_val', 'car_pc', 'human_pc', 'slug','booking_url'))
+        #data = serializers.serialize('json',parking,fields=('name','provider','lmpPID','address','lon','lat', 'country', 'region', 'area'))
         return HttpResponse(data, content_type='application/json')      
