@@ -105,14 +105,28 @@ function cargar_mapa() {
 
 }
 
+function elegirDireccion(lat, lng, tipo_osm) {
 
+    var point = L.latLng(lat, lng);
+    
+    /*
+    500 representa metros, pueden cambiarlo a discrecion, incluso colocar
+    un popup para que el usuario pueda conltar a 500/800/1000
+    */
 
+    var bounds = point.toBounds(1400); 
+    // Devuelve un nuevo LatLngBoundsobjeto en el que cada límite está a
+    // sizeInMeters/2metros de distancia de LatLng.
 
-function elegirDireccion(lat1, lng1, lat2, lng2, tipo_osm) {
-    var loc1 = new L.LatLng(lat1, lng1);
-    var loc2 = new L.LatLng(lat2, lng2);
-    var bounds = new L.LatLngBounds(loc1, loc2);
+    var l1 = bounds['_southWest']; //esquina suroeste del rectangulo o areá
+    var l2 = bounds['_northEast']; //esquina noreste
 
+    var lat1 = l1.lat;
+    var lat2 = l2.lat;
+    var lng1 = l1.lng;
+    var lng2 = l2.lng;
+        
+    
     if (tipo) {
         mapa.removeLayer(tipo);
     }
@@ -120,26 +134,55 @@ function elegirDireccion(lat1, lng1, lat2, lng2, tipo_osm) {
         tipo = L.circle(loc1, 25, { color: 'green', fill: false }).addTo(mapa);
         mapa.fitBounds(bounds);
         mapa.setZoom(18);
-    } else {
+    } 
+        
+    else {
         var loc3 = new L.LatLng(lat1, lng2);
         var loc4 = new L.LatLng(lat2, lng1);
-        tipo = L.polyline([loc1, loc4, loc2, loc3, loc1], { color: 'grey' }).addTo(mapa);
-        mapa.fitBounds(bounds);
+        tipo = L.polyline([l1, loc4, l2, loc3, l1], { color: 'none' }).addTo(mapa);
+        
+        circle = L.circle(point, 500, {
+            color: 'green',
+            /*fill: false,
+            /*fillColor: '#f03',*/
+            fillOpacity: 0.1,
+            weight: 1
+        }).addTo(mapa);
+
+        circleExterior = L.circle(point, 900, {
+            color: 'red',
+            fill: false,
+            /*fillColor: '#f03',
+            fillOpacity: 0.1,*/
+            weight: 1
+        }).addTo(mapa);
+
+        mapa.fitBounds(bounds); 
+        //Crea un objeto LatLngBounds definido por los puntos geográficos que contiene. 
+        //Muy útil para hacer zoom en el mapa para que se ajuste a un conjunto particular de ubicaciones 
+
     }
-    valor(loc1, loc2);
+    
+    valor(l1,l2);
 }
+
 
 
 
 function direccion_buscador() {
     var entrada = document.getElementById("direccion");
 
-    $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + entrada.value, function(data) {
+    $.getJSON('http://nominatim.OpenStreetMap.org/search?format=json&limit=5&q=' + entrada.value, function(data) {
+    // esto ndica como limitar solo para españa
+
+    //$.getJSON('http://nominatim.OpenStreetMap.org/search?format=json&countrycodes=es&limit=5&q=' + entrada.value, function(data) {    
         var direcciones = [];
 
         $.each(data, function(key, val) {
             bb = val.boundingbox;
-            direcciones.push("<li><a href='#' onclick='elegirDireccion(" + bb[0] + ", " + bb[2] + ", " + bb[1] + ", " + bb[3] + ", \"" + val.tipo_osm + "\");return false;'>" + val.display_name + '</a></li>');
+            console.log("### Buscar direccions", val.lat, val.lon);
+            direcciones.push("<li><a href='#' onclick='elegirDireccion(" + val.lat + ", " + val.lon  + ", \"" + val.tipo_osm + "\");return false;'>" + val.display_name + '</a></li>');
+            //direcciones.push("<li><a href='#' onclick='elegirDireccion(" + bb[0] + ", " + bb[2] + ", " + bb[1] + ", " + bb[3] + ", \"" + val.tipo_osm + "\");return false;'>" + val.display_name + '</a></li>');
         });
 
         $('#resultado').empty();
@@ -161,7 +204,7 @@ function direccion_buscador() {
 
 function valor(loc1, loc2) {
     $.ajax({
-        data: { 'lat1': loc1.lat, 'lon1': loc1.lng, 'lat2': loc2.lat, 'lon2': loc2.lng, },
+        data: { 'lat1': loc1.lat, 'lon1': loc1.lng, 'lat2': loc2.lat, 'lon2': loc2.lng,},data: { 'lat1': loc1.lat, 'lon1': loc1.lng, 'lat2': loc2.lat, 'lon2': loc2.lng, },
         url: '/BusquedaAjax/',
         type: 'get',
         success: function(data) {
@@ -216,7 +259,7 @@ function valor(loc1, loc2) {
                         "<li class='list-group-item'><b>Car_pc:</b>" + " " + data[i].fields.car_pc + "</li>" +
                         "<li class='list-group-item'><b>Human_pc:</b>" + " " + data[i].fields.human_pc + "</li>" +
                         "<li class='list-group-item'><b>Slug:</b>" + " " + data[i].fields.slug + "</li>" +
-                        "<li class='list-group-item'><b>Booking Url:</b>" + " " + "<a href=" + data[i].fields.booking_url + ">" + "</a></li >" + "</ul>").addTo(mapa);
+                        "<li class='list-group-item'><b>Booking Url:</b>" + " " + "<a target='_blank' href=" + data[i].fields.booking_url + ">" + data[i].fields.booking_url + "</a></li >" + "</ul>").addTo(mapa);
             }
         }
 

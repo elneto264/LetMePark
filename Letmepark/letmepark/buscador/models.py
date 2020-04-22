@@ -1,28 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 from django.db import models
-
-# Create your models here.
-class Parkings(models.Model):
-    _id = models.CharField(max_length=100, primary_key=True)
-    lmpPID = models.CharField(max_length=60)
-    name = models.CharField(max_length=60)
-    provider = models.CharField(max_length=60)
-    """ id = models.AutoField(primary_key = True)
-    nombre = models.CharField(max_length=20,null=True)
-    latitud = models.DecimalField(max_digits=22, decimal_places=16, null=True)
-    longitud = models.DecimalField(max_digits=22, decimal_places=16, null=True)
-    direccion =  models.CharField(max_length=500,null=True) """
-    
-    class Meta:
-        managed = False
-        db_table = 'parkings'
-    
-    """ def __str__(self):
-=======
-=======
->>>>>>> Desarollo
-from django.db import models
 from djongo.models import DecimalField, FloatField, URLField
 from djmoney.models.fields import MoneyField
 
@@ -55,7 +33,6 @@ class Parkings(models.Model):
 =======
     lon = FloatField()
     lat = FloatField()
->>>>>>> Desarollo
     country = models.CharField(max_length=160)
     region = models.CharField(max_length=160)
     area = models.CharField(max_length=160)
@@ -75,8 +52,8 @@ class Parkings(models.Model):
     car_pc = models.CharField(max_length=160)
     human_pc = models.CharField(max_length=160)
     slug = models.CharField(max_length=160) 
-    #booking_url = models.CharField(max_length=250)
-    booking_url = models.URLField()
+    booking_url = models.CharField(max_length=250)
+    #booking_url = models.URLField()
     
     
 <<<<<<< HEAD
@@ -112,4 +89,3 @@ class Parkings(models.Model):
 
     #  def str(self):
     #         return self.nombre
->>>>>>> Desarollo

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buscador',
     'bootstrap4',
+    
 ]
 
 MIDDLEWARE = [
