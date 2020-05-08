@@ -1,151 +1,202 @@
-var mapa;
-var tipo;
+function cargarMapa() {
 
-function cargar_mapa() {
-    mapa = new L.Map('mapa', { zoomControl: true });
-    var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    var osmAttribution = 'Map data &copy; 2012 <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-    var layer_osm = new L.TileLayer(osmUrl, { maxZoom: 18, attribution: osmAttribution });
-    mapa.setView(new L.LatLng(40.4165, -3.70256), 13).addLayer(layer_osm);
-}
+    var madrid = new google.maps.LatLng(40.416775, -3.703790);
 
-function elegirDireccion(lat, lng, tipo_osm) {
-
-    var point = L.latLng(lat, lng);
-    var bounds = point.toBounds(1400); 
-
-    var l1 = bounds['_southWest']; 
-    var l2 = bounds['_northEast']; 
-
-    var lat1 = l1.lat;
-    var lat2 = l2.lat;
-    var lng1 = l1.lng;
-    var lng2 = l2.lng;
-        
-    
-    if (tipo) {
-        mapa.removeLayer(tipo);
-    }
-    if (tipo_osm == "node") {
-        tipo = L.circle(loc1, 25, { color: 'green', fill: false }).addTo(mapa);
-        mapa.fitBounds(bounds);
-        mapa.setZoom(18);
-    } 
-        
-    else {
-        var loc3 = new L.LatLng(lat1, lng2);
-        var loc4 = new L.LatLng(lat2, lng1);
-        tipo = L.polyline([l1, loc4, l2, loc3, l1], { color: 'none' }).addTo(mapa);
-        
-        circle = L.circle(point, 500, {
-            color: 'green',
-            fillOpacity: 0.1,
-            weight: 1
-        }).addTo(mapa);
-
-        circleExterior = L.circle(point, 900, {
-            color: 'red',
-            fill: false,
-            weight: 1
-        }).addTo(mapa);
-
-        mapa.fitBounds(bounds); 
-    }
-    
-    valor(l1,l2);
-}
-
-
-
-
-function direccion_buscador() {
-    var entrada = document.getElementById("direccion");
-
-    $.getJSON('https://nominatim.OpenStreetMap.org/search?format=json&limit=5&q=' + entrada.value, function(data) {
-
-        var direcciones = [];
-
-        $.each(data, function(key, val) {
-            bb = val.boundingbox;
-            direcciones.push("<li><a href='#' onclick='elegirDireccion(" + val.lat + ", " + val.lon  + ", \"" + val.tipo_osm + "\");return false;'>" + val.display_name + '</a></li>');
-        });
-
-        $('#resultado').empty();
-        if (direcciones.length != 0) {
-            $('<p>', { html: "Resultados de la b&uacute;queda:" }).appendTo('#resultado');
-            $('<ul/>', {
-                'class': 'my-new-list',
-                html: direcciones.join('')
-            }).appendTo('#resultado');
-        } else {
-            $('<p>', { html: "Ningun resultado encontrado." }).appendTo('#resultado');
-        }
-
+    mapa = new google.maps.Map(document.getElementById('mapa'), {
+        center: madrid,
+        zoom: 15
     });
-}
+
+    // var request = {
+    //     location: madrid,
+    //     radius: '500',
+    //     types: ['store']
+    // };
+
+    // service = new google.maps.places.PlacesService(mapa);
+    // service.nearbySearch(request, callback);
+
+    //Variables para autocompletar y el searchBox
+    var input = document.getElementById('direccion');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    var searchBox = new google.maps.places.SearchBox(input);
+    var marker = new google.maps.Marker({
+        mapa: mapa
+    });
+
+
+    //autocompletar-----------------------------------------------------------------------
+
+
+    // Bias the SearchBox results towards current map's viewport.
+    autocomplete.bindTo('bounds', mapa);
+    // Set the data fields to return when the user selects a place.
+    autocomplete.setFields(
+        ['address_components', 'geometry', 'name']);
+
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    autocomplete.addListener('place_changed', function() {
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            console.log("Returned place contains no geometry autocompletar");
+
+            return;
+        }
+        var bounds = new google.maps.LatLngBounds();
+        console.log(bounds);
+        marker.setPosition(place.geometry.location);
+
+        if (place.geometry.viewport) {
+            // Only geocodes have viewport.
+            console.log("entro al if del geometry autocompletar");
+            bounds.union(place.geometry.viewport);
+            marker.setMap(mapa);
+        } else {
+            console.log("entro al else autocompletar");
+            bounds.extend(place.geometry.location);
+        }
+        mapa.fitBounds(bounds);
+    });
+
+
+    //caja buscador(searchBox)-------------------------------------------------------------------------------
+
+
+    // Bias the SearchBox results towards current map's viewport.
+    mapa.addListener('bounds_changed', function() {
+        searchBox.setBounds(mapa.getBounds());
+    });
+
+    var markers = [];
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+        if (places.length == 0) {
+            return;
+        }
+        // Clear out the old markers.
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+        // For each place, get the location.
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+            if (!place.geometry) {
+                console.log("Returned place contains no geometry buscador");
+                return;
+            }
+
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+                mapa: mapa,
+                position: place.geometry.location
+            }));
+
+            if (place.geometry.viewport) {
+                // Only geocodes have viewport.
+
+                console.log(" entro al if del geometry buscador");
+                bounds.union(place.geometry.viewport);
+                console.log(bounds)
+                marker.setMap(mapa);
+            } else {
+                console.log("Else geometry buscador");
+                bounds.extend(place.geometry.location);
+            }
+        });
+        mapa.fitBounds(bounds);
+    });
 
 
 
 
-function valor(loc1, loc2) {
+    // function callback(results, status) {
+    //     if (status == google.maps.places.PlacesServiceStatus.OK) {
+    //         for (var i = 0; i < results.length; i++) {
+    //             console.log(results[i]);
+    //         }
+    //     }
+    // }
+
+    //latitud y longitud del lugar buscado
+    var lat = place.geometry.location.lat();
+    var lng = place.geometry.location.lng();
+
+    mapa.setCenter(new google.maps.LatLng(lat, lng));
+
+    //radio in metros
+    var radio = 500;
+
+    /* crea el circulo basado en el radio dado */
+    var circle = new google.maps.Circle({
+        center: mapa.getCenter(),
+        radius: radio
+    });
+
+    //Nuevos limites del circulo
+    var bounds = circle.getBounds();
+    /* Ajuste el mapa al tamaño del círculo. Será un poco más grande que el círculo ya que la API agrega un poco de relleno */
+    mapa.fitBounds(bounds);
+
+    var southWest = bounds.getSouthWest();
+    var northEast = bounds.getNorthEast();
+
+    //obtener lat y longitd de los limites para enviarlo a la view
+    var minLat = southWest.lat();
+    var minLon = southWest.lng();
+
+    var maxLat = northEast.lat();
+    var maxLon = northEast.lng();
+    //imagen del icono
+    var icon = {
+        url: "/static/img/car.png", // url
+        scaledSize: new google.maps.Size(25, 25), // tamaño a escala
+        origin: new google.maps.Point(0, 0), // originen
+        //anchor: new google.maps.Point(0, 0)
+    };
+
+
     $.ajax({
-        data: { 'lat1': loc1.lat, 'lon1': loc1.lng, 'lat2': loc2.lat, 'lon2': loc2.lng,},data: { 'lat1': loc1.lat, 'lon1': loc1.lng, 'lat2': loc2.lat, 'lon2': loc2.lng, },
+        data: {
+            'lat1': minLat,
+            'lon1': minLon,
+            'lat2': maxLat,
+            'lon2': maxLon,
+        },
         url: '/BusquedaAjax/',
         type: 'get',
         success: function(data) {
+            console.log("consulta hecha")
 
-            var parkIcon = L.icon({
-                iconUrl: '/static/img/car.png',
-                iconSize: [35, 35],
-            });
-
-
-
-
+            var infowindow = new google.maps.InfoWindow;
+            var marker, i;
 
             for (var i = 0; i < data.length; i++) {
-
-                var customPopup = "<div></div>";
-                var customOptions = {
-                    'maxWidth': '300',
-                    'width': '100',
-                    'className': 'popupCustom'
-                };
-
-
-                L.marker([data[i].fields.lat, data[i].fields.lon], { icon: parkIcon })
-                    .bindPopup("<ul id='datoPop' class='list-group list-group-flush'>" +
-                        "<li class='list-group-item'><b>Nombre:</b>" + " " + data[i].fields.name + "</li>" +
-                        "<li class='list-group-item'><b>Dirección:</b>" + " " + data[i].fields.address + "</li>" +
-                        "<li class='list-group-item'><b>lmpPID:</b>" + " " + data[i].fields.lmpPID + "</li>" +
-                        "<li class='list-group-item'><b>Provider:</b>" + " " + data[i].fields.provider + "</li>" +
-                        "<li class='list-group-item'><b>PID:</b>" + " " + data[i].fields.PID + "</li>" +
-                        "<li class='list-group-item'><b>Longitud:</b>" + " " + data[i].fields.lon + "</li>" +
-                        "<li class='list-group-item'><b>Latitud:</b>" + " " + data[i].fields.lat + "</li>" +
-                        "<li class='list-group-item'><b>Pais:</b>" + " " + data[i].fields.country + "</li>" +
-                        "<li class='list-group-item'><b>Región:</b>" + " " + data[i].fields.region + "</li>" +
-                        "<li class='list-group-item'><b>Area:</b>" + " " + data[i].fields.area + "</li>" +
-                        "<li class='list-group-item'><b>Who:</b>" + " " + data[i].fields.who + "</li>" +
-                        "<li class='list-group-item'><b>Is_used:</b>" + " " + data[i].fields.is_used + "</li>" +
-                        "<li class='list-group-item'><b>Cancelable:</b>" + " " + data[i].fields.cancelable + "</li>" +
-                        "<li class='list-group-item'><b>Cancel_mn:</b>" + " " + data[i].fields.cancel_mn + "</li>" +
-                        "<li class='list-group-item'><b>Cancel_msg:</b>" + " " + data[i].fields.cancel_msg + "</li>" +
-                        "<li class='list-group-item'><b>Max_height:</b>" + " " + data[i].fields.max_height + "</li>" +
-                        "<li class='list-group-item'><b>Hour_price:</b>" + " " + data[i].fields.hour_price + "</li>" +
-                        "<li class='list-group-item'><b>Day_price:</b>" + " " + data[i].fields.day_price + "</li>" +
-                        "<li class='list-group-item'><b>access_msg:</b>" + " " + data[i].fields.access_msg + "</li>" +
-                        "<li class='list-group-item'><b>User_val:</b>" + " " + data[i].fields.user_val + "</li>" +
-                        "<li class='list-group-item'><b>Lmp_val:</b>" + " " + data[i].fields.lmp_val + "</li>" +
-                        "<li class='list-group-item'><b>Ben_val:</b>" + " " + data[i].fields.ben_val + "</li>" +
-                        "<li class='list-group-item'><b>Gen_val:</b>" + " " + data[i].fields.gen_val + "</li>" +
-                        "<li class='list-group-item'><b>Car_pc:</b>" + " " + data[i].fields.car_pc + "</li>" +
-                        "<li class='list-group-item'><b>Human_pc:</b>" + " " + data[i].fields.human_pc + "</li>" +
-                        "<li class='list-group-item'><b>Slug:</b>" + " " + data[i].fields.slug + "</li>" +
-                        "<li class='list-group-item'><b>Booking Url:</b>" + " " + "<a target='_blank' href=" + data[i].fields.booking_url + ">" + data[i].fields.booking_url + "</a></li >" + "</ul>").addTo(mapa);
+                //pinta los marcadores
+                marker = new google.maps.Marker({
+                    position: {
+                        lat: data[i].fields.lat,
+                        lng: data[i].fields.lon
+                    },
+                    title: "Nombre:" + " " + data[i].fields.name + "<br>" + "Dirección:" + " " + data[i].fields.address,
+                    mapa: mapa,
+                    icon: icon
+                });
+                //escucha un evento  y tiene una función para llamar cuando ocurre el evento especificado. en este caso cuando ocurre el evento click en el marcador, pinta el globo con la informacion de dicho marcador
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        infowindow.setContent("Nombre:" + " " + data[i].fields.name + "<br>" + "Dirección:" + " " + data[i].fields.address);
+                        infowindow.open(map, marker);
+                    }
+                })(marker, i));
             }
         }
-
     });
-}
 
-window.onload = cargar_mapa;
+
+} //cargar mapa
+
+window.onload = cargarMapa;
